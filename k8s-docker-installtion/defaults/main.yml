@@ -1,0 +1,21 @@
+---
+# defaults file for k8s-docker-installtion
+
+# The default packages.
+required_packages:
+- apt-transport-https
+- ca-certificates
+- curl
+- software-properties-common
+
+# The docker default packages.
+docker_packages:
+- containerd.io
+- docker-ce
+- docker-ce-cli
+
+# The hold packages.
+hold_packages:
+- containered.io
+- docker-ce
+- docker-ce-cli

@@ -1,0 +1,10 @@
+---
+- hosts: gcp-compute-engines
+  remote_user: asoliman
+  become: true
+
+  roles:
+  # Installing the docker on the hosts
+    - k8s-docker-installtion
+  # Install k8s compnentes
+    - setup-kube-components

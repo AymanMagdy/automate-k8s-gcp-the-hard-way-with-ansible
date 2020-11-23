@@ -1,0 +1,84 @@
+---
+# tasks file for k8s-docker-installtion
+
+# Updating the hosts.
+- name: Update the server
+  shell: sudo apt-get update
+
+# Install some docker packages on the hosts.
+- name: Install some packages for docker.
+  become: true
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ required_packages }}"
+
+# The docker key
+- name: Add Docker's official GPG key
+  shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+# The docker repo
+- name: Add Docker's official GPG key
+  shell: sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+# Install the docker CE
+- name: Install docker CE packages.
+  become: true
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ docker_packages }}"
+  
+# Hold packages
+- name: Hold docker packages
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  with_items: "{{ hold_packages }}"
+
+# Updating the server
+- name: Update the server
+  shell: sudo apt-get update
+
+# Create the docker deamon file.
+- name: Create the docker deamon file.
+  file:
+    path: /etc/docker/daemon.json
+    state: touch
+    owner: root
+    group: root
+    mode: 0644
+
+# Setup the docker deamon.
+- name: Setup deamon
+  lineinfile:
+    path: /etc/docker/daemon.json
+    line: '{
+      "exec-opts": ["native.cgroupdriver=systemd"],
+      "log-driver": "json-file",
+      "log-opts": {
+      "max-size": "100m"
+      },
+      "storage-driver": "overlay2"
+    }'
+
+# Make the systemctl service for the docker service.
+- name: make the docker service
+  shell: sudo mkdir -p /etc/systemd/system/docker.service.d
+
+# Restart the docker service.
+- name: Restart docker service
+  service:
+    name: daemon-reload
+
+# Restart the docker service.
+- name: Restart docker service
+  service:
+    name: docker
+    state: restarted
+
+# Restart the docker service.
+- name: Enable docker service
+  service:
+    name: docker
+    enabled: yes
