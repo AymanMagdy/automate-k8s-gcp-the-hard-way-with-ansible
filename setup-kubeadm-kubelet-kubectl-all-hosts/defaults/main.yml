@@ -1,0 +1,6 @@
+---
+# defaults file for setup-kubeadm-kubelet-kubectl-all-hosts
+kube_packages:
+- kubelet
+- kubeadm
+- kubectl

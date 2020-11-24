@@ -1,10 +1,9 @@
 ---
+# Setup the docker and the kube components for all the machines.
 - hosts: gcp-compute-engines
   remote_user: asoliman
   become: true
 
   roles:
-  # Installing the docker on the hosts
     - k8s-docker-installtion
-  # Install k8s compnentes
-    - setup-kube-components
+    - setup-kubeadm-kubelet-kubectl-all-hosts

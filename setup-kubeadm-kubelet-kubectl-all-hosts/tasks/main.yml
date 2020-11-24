@@ -1,0 +1,31 @@
+---
+# tasks file for setup-kubeadm-kubelet-kubectl-all-hosts
+- name: Add GPG key
+  shell: curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+
+# Add the k8s apt repository
+- name: Add K8S apt repo 
+  shell: echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" >> /etc/apt/sources.list.d/kubernetes.list
+  
+# Get the k8s repo data
+- name: Get K8S apt repo
+  shell: sudo apt-get update
+
+# List the available versions from the cache
+- name: List the available versions of Kubeadmin
+  shell: apt-cache madison kubeadm
+
+# Install the kube packages.
+- name: Install kubelet, kubeadm, kubectl packages
+  become: true
+  apt:
+    name: "{{ item }}=1.15.7-00"
+    state: present
+  with_items: "{{ kube_packages }}"
+
+# Hold packages
+- name: Hold kube packages
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  with_items: "{{ kube_packages }}"
