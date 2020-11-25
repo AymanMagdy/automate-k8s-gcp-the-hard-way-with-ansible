@@ -1,0 +1,7 @@
+---
+# tasks file for workers-join-cluster
+
+- name: Workers to join the cluster
+  become: yes
+  shell: "kubeadm join 10.240.0.10:6443 --token {{ ca-token }} \
+        --discovery-token-ca-cert-hash sha256: {{ ca-hash-256 }}"

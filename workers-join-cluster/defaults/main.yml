@@ -1,0 +1,7 @@
+---
+# defaults file for workers-join-cluster
+ca-token:
+  - 8osl8a.3cp0xcgkb58u7ufy
+
+ca-hash-256:
+  - d181f45dad102cacedd93871fb3e7ae05664dceba9344f67737d7ea3ffbc3c79
