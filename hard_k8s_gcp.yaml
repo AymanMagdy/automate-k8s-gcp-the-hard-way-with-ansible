@@ -1,9 +1,16 @@
 ---
-# Setup the docker and the kube components for all the machines.
-- hosts: gcp-compute-engines
+# # Setup the docker and the kube components for all the machines.
+# - hosts: gcp-compute-engines
+#   remote_user: asoliman
+#   become: true
+
+#   roles:
+#     - k8s-docker-installtion
+#     - setup-kubeadm-kubelet-kubectl-all-hosts
+
+# Configuring the control plane on the master node
+- hosts: master-node
   remote_user: asoliman
   become: true
-
   roles:
-    - k8s-docker-installtion
-    - setup-kubeadm-kubelet-kubectl-all-hosts
+    - master-control-plane

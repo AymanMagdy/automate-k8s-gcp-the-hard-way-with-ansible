@@ -1,0 +1,30 @@
+---
+# tasks file for master-control-plane
+
+# Set the GCP zone
+- name: Set the GCP zone
+  shell: gcloud config set compute/zone us-west1-c
+
+# Adding the kube-apiserver public ip for later usage
+- name: Add the k8s public IP address variable
+  shell: KUBERNETES_PUBLIC_ADDRESS=$(gcloud compute instances describe controller \
+        --zone $(gcloud config get-value compute/zone) \
+        --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+
+# Intializing the kubeadm with custom specs and passing the IP of the kube-apiserver
+- name: Intialize the kubeadm command
+  shell: sudo kubeadm init \
+        --pod-network-cidr=10.244.0.0/16 \
+        --ignore-preflight-errors=NumCPU \
+        --apiserver-cert-extra-sans=$KUBERNETES_PUBLIC_ADDRESS
+
+# Get the admin access to the cluste and config the dirs
+- name: Get the admin access to the cluster
+  shell: mkdir -p $HOME/.kube && \
+        sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config && \
+        sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+# Install the calico CNI solutoin 
+# [Hint: calico works on layer 3 to tranfer the packet between the pods. flannel works on layer 2] 
+- name: Install the calico Pod network
+  shell: kubectl apply -f https://docs.projectcalico.org/v3.8/manifests/canal.yaml

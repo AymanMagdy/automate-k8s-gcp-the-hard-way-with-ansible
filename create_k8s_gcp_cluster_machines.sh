@@ -11,7 +11,7 @@ gcloud compute instances create controller \
 --boot-disk-size 200GB --can-ip-forward \
 --image-family ubuntu-1804-lts \
 --image-project ubuntu-os-cloud \
---machine-type n2-standard-2 \
+--machine-type n1-standard-1 \
 --private-network-ip 10.240.0.10 \
 --scopes compute-rw,storage-ro,service-management,service-control,logging-write,monitoring \
 --subnet kubernetes \
@@ -25,7 +25,7 @@ for i in 0 1; do \
     --can-ip-forward \
     --image-family ubuntu-1804-lts \
     --image-project ubuntu-os-cloud \
-    --machine-type n2-standard-2 \
+    --machine-type n1-standard-1 \
     --private-network-ip 10.240.0.2${i} \
     --scopes compute-rw,storage-ro,service-management,service-control,logging-write,monitoring \
     --subnet kubernetes;

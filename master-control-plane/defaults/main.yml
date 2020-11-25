@@ -1,0 +1,4 @@
+---
+# defaults file for master-control-plane
+gcp_instance_zone:
+  - us-west1-c
